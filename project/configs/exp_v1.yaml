@@ -1,0 +1,8 @@
+data:
+  name: iris_v1
+features:
+  version: iris_v1_features_v1
+model:
+  name: decison_tree
+  params:
+    max_depth: 3
