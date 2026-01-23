@@ -15,22 +15,27 @@ from data.base import BaseDataset
 from features import feature_registry
 from models import model_registry
 from sklearn.metrics import accuracy_score
+import mlflow
 
 def main(config: dict):
-    print(config)
-    dataset: BaseDataset = data_registry.load_dataset(dataset_name=config["data"]["name"])
-    X_raw, y = dataset.load()
+    with mlflow.start_run():
+        print(config)
+        mlflow.log_params(params=config)
 
-    get_features = feature_registry.load_get_features(feature_version=config["features"]["version"])
-    X = get_features(X_raw)
+        dataset: BaseDataset = data_registry.load_dataset(dataset_name=config["data"]["name"])
+        X_raw, y = dataset.load()
 
-    print(X.columns)
-    model = model_registry.get_model(config["model"]["name"], config["model"]["params"])
-    model.fit(X, y)
-    y_pred = model.predict(X)
+        get_features = feature_registry.load_get_features(feature_version=config["features"]["version"])
+        X = get_features(X_raw)
 
-    accuracy = accuracy_score(y_true=y, y_pred=y_pred)
-    print(accuracy)
+        print(X.columns)
+        model = model_registry.get_model(config["model"]["name"], config["model"]["params"])
+        model.fit(X, y)
+        y_pred = model.predict(X)
+
+        accuracy = accuracy_score(y_true=y, y_pred=y_pred)
+        print(accuracy)
+        mlflow.log_metric("accuracy", accuracy)
 
 
 
