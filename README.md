@@ -11,9 +11,7 @@ The goal is **not** to build a new MLFlow replacement, but to understand
 data → features → model → experiment tracking.
 
 This is to understand how a framework can be built on top of mlflow. 
-It will be openionated with guidelines, one correct way to do things so it can scale.
-
----
+It will be opinionated with guidelines, one correct way to do things so it can scale.
 
 ## Why this project exists
 
@@ -29,7 +27,6 @@ training pipeline using:
 - registries for data / features / models
 - MLflow for experiment tracking
 
----
 
 ## What this project currently supports
 
@@ -40,7 +37,6 @@ training pipeline using:
 - Parameter logging to MLflow
 - Reproducible train/test split
 
----
 
 ## How to run
 
@@ -72,22 +68,25 @@ This will:
 
 ## Project structure
 
+## Project Structure
+
+```text
 .
-├── train.py                 # Entry point
+├── train.py                 # Entry point for training
 ├── configs/
 │   └── exp_v1.yaml           # Experiment configuration
 ├── data/
 │   ├── base.py               # Dataset interface
 │   ├── data_registry.py      # Dataset registry
-│   └── iris_v1.py
+│   └── iris_v1.py            # Iris dataset (v1)
 ├── features/
 │   ├── feature_registry.py   # Feature registry
 │   └── iris_v1_features_v1.py
 ├── models/
-│   └── model_registry.py
-├── utils.py
+│   └── model_registry.py     # Model registry
+├── utils.py                 # Shared utilities
 └── README.md
-
+```
 
 ## Design principles
 
