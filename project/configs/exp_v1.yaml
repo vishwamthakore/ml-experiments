@@ -3,6 +3,6 @@ data:
 features:
   version: iris_v1_features_v1
 model:
-  name: decison_tree
+  name: decision_tree
   params:
     max_depth: 3
