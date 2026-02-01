@@ -1,5 +1,8 @@
 import yaml
 from pathlib import Path
+import hashlib
+import inspect
+import git
 
 def load_config(config: str) -> dict:
     filepath = Path(__file__).parent / "configs" / f"{config}.yaml"
@@ -21,3 +24,13 @@ def flatten_dict(nested_dict: dict, parent_key: str = ""):
         else:
             final[full_key] = value
     return final
+
+def get_source_code(func) -> str:
+    return inspect.getsource(func)
+
+def get_hash(input_string: str) -> str:
+    return hashlib.md5(input_string.encode()).hexdigest()
+
+def get_git_sha() -> str:
+    repo = git.Repo(search_parent_directories=True)
+    return repo.head.object.hexsha

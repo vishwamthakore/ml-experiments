@@ -3,7 +3,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 MODEL_REGISTRY = {
     "logistic_regression": LogisticRegression,
-    "decison_tree": DecisionTreeClassifier
+    "decision_tree": DecisionTreeClassifier
 }
 
 def get_model(model_name: str, params: dict):
