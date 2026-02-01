@@ -1,4 +1,4 @@
-# ML Experiments – Config-Driven Training (Learning Project)
+# ML Experiments – Config-Driven Training & Reproducible Runs (Learning Project)
 
 ## What is this project
 
@@ -8,7 +8,8 @@ ML platforms.
 
 The goal is **not** to build a new MLFlow replacement, but to understand
 *how components are wired together*:
-data → features → model → experiment tracking.
+
+**data → features → model → experiment tracking → reproducibility checks**
 
 This is to understand how a framework can be built on top of mlflow. 
 It will be opinionated with guidelines, one correct way to do things so it can scale.
@@ -26,17 +27,33 @@ training pipeline using:
 - YAML configs
 - registries for data / features / models
 - MLflow for experiment tracking
-
+- Explicit reproducibility checks before reruns
 
 ## What this project currently supports
 
+### Training
 - Config-driven training via YAML
 - Dataset versioning via registry (e.g. `iris_v1`)
 - Feature versioning via functions (e.g. `iris_v1_features_v1`)
 - Model selection via registry
-- Parameter logging to MLflow
+- Parameter and metric logging to MLflow
 - Reproducible train/test split
 
+### Reproducible experiment replay
+- Fetching historical runs from MLflow by run name
+- Recomputing:
+  - data fingerprints
+  - feature code hashes
+- Building a **comparison report** between past and current runs
+- Producing a **contract verdict**:
+  - ✅ safe to rerun
+  - ❌ rerun blocked due to drift
+
+Importantly:
+- No exceptions are raised for mismatches
+- The system reports facts and makes the decision explicit
+
+---
 
 ## How to run
 
@@ -63,18 +80,30 @@ This will:
 - load the dataset specified in the config
 - apply the selected feature version
 - train the selected model with given parameters
-- log parameters and metrics to MLflow
+- log parameters and metrics and fingerprints to MLflow
 
 
-## Project structure
+```bash
+python train.py --config replay_exp_v1
+```
+
+
+This will:
+- load a historical MLflow run by name
+- recompute current data and feature fingerprints
+- build a comparison report
+- produce a verdict indicating whether rerun is safe
+
 
 ## Project Structure
 
 ```text
 .
-├── train.py                 # Entry point for training
+├── train.py                 # Entry point for training and replay
+├── replay.py                # Experiment replay & comparison logic
 ├── configs/
-│   └── exp_v1.yaml           # Experiment configuration
+│   ├── exp_v1.yaml           # Training configuration
+│   └── replay_exp_v1.yaml    # Replay configuration
 ├── data/
 │   ├── base.py               # Dataset interface
 │   ├── data_registry.py      # Dataset registry
@@ -84,8 +113,9 @@ This will:
 │   └── iris_v1_features_v1.py
 ├── models/
 │   └── model_registry.py     # Model registry
-├── utils.py                 # Shared utilities
+├── utils.py                  # Shared utilities (hashing, config loading)
 └── README.md
+
 ```
 
 ## Design principles
@@ -107,5 +137,10 @@ These will be explored incrementally as learning steps.
 
 ## Status
 
-This is an incremental learning project.
-The README and architecture evolve with each “work”.
+This repository represents a stable learning checkpoint:
+- config-driven training
+- MLflow-based tracking
+- reproducible experiment replay via explicit contracts
+
+Further exploration (UI, feature playgrounds, orchestration, infra) will happen
+in **separate repositories**, to keep this one focused and readable.

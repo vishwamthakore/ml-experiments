@@ -9,4 +9,4 @@ model:
 experiment:
   name: Iris Classification Experiments
   mode: replay # or trains
-  runName: clean-seal-91 # not needed for train
+  runName: sedate-carp-119 # not needed for train
